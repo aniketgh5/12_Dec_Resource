@@ -9,7 +9,7 @@ variables:
 # - name: WORKDIR # Required as first property. Variable name.
 #   value: $(System.DefaultWorkingDirectory)/env/dev # Variable value.
 - group: Variable_SVC
-- name: ANIKET_Shared_Connection
+- name: Service_Connection
   value: 'ANIKET_Shared_Connection'
 
 
@@ -33,7 +33,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            backendServiceArm: '$(ANIKET_Shared_Connection)'
+            backendServiceArm: '$(Service_Connection)'
             backendAzureRmStorageAccountName: 'backendstrg'
             backendAzureRmContainerName: 'strg'
             backendAzureRmKey: 'dev.terraform.tfstate'

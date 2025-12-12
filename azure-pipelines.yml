@@ -1,0 +1,27 @@
+name: infra_monolithik
+
+
+trigger: none
+
+pool: Remote_Agent
+
+variables:
+- name: WORKDIR # Required as first property. Variable name.
+  value: $(System.DefaultWorkingDirectory)/env/dev # Variable value.
+
+stages:
+  - stage: Terraform_Install
+    jobs:
+      - job: 
+        steps:
+        - task: Bash@3
+          inputs:
+            targetType: 'inline'
+            script: |
+              # Write your commands here
+              
+              echo 'zip install'
+              sudo apt install unzip
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest'

@@ -11,7 +11,8 @@ variables:
 - group: Variable_Collection
 - name: WORK
   # value: 'ANIKET_Shared_Connection'
-
+- name: TFVARS
+  value: "${{ parameters.envrionment }}.tfvars"
 
 
 parameters:
@@ -69,5 +70,5 @@ stages:
             provider: 'azurerm'
             command: 'plan'
             workingDirectory: '$(WORKDIR)/${{ parameters.envrionment }}'
-            commandOptions: -var-file="${{ parameters.envrionment }}.tfvars"
+            commandOptions: -var-file="$(TFVARS)"
             environmentServiceNameAzureRM: 'ANIKET_Shared_Connection'

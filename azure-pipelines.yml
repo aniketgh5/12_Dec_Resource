@@ -42,7 +42,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(WORK)'
+            workingDirectory: '$(WORKDIR)/${{ parameters.envrionment }}'
             backendServiceArm: 'ANIKET_Shared_Connection'
             backendAzureRmStorageAccountName: 'backendstrg'
             backendAzureRmContainerName: 'strg'
@@ -68,5 +68,6 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'plan'
+            workingDirectory: '$(WORKDIR)/${{ parameters.envrionment }}'
             commandOptions: '-var-file=${{ parameters.envrionment }}'
             environmentServiceNameAzureRM: 'ANIKET_Shared_Connection'

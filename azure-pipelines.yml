@@ -8,9 +8,9 @@ pool: Remote_Agent
 variables:
 # - name: WORKDIR # Required as first property. Variable name.
 #   value: $(System.DefaultWorkingDirectory)/env/dev # Variable value.
-- group: Variable_SVC
-- name: Service_Connection
-  value: 'ANIKET_Shared_Connection'
+- group: Variable_Collection
+- name: WORK
+  # value: 'ANIKET_Shared_Connection'
 
 
 stages:
@@ -33,7 +33,8 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            backendServiceArm: '$(Service_Connection)'
+            workingDirectory: '$(WORK)'
+            backendServiceArm: 'ANIKET_Shared_Connection'
             backendAzureRmStorageAccountName: 'backendstrg'
             backendAzureRmContainerName: 'strg'
             backendAzureRmKey: 'dev.terraform.tfstate'

@@ -6,14 +6,16 @@ trigger: none
 pool: Remote_Agent
 
 variables:
-# - name: WORKDIR # Required as first property. Variable name.
-#   value: $(System.DefaultWorkingDirectory)/env/dev # Variable value.
+- name: WORKDIR # Required as first property. Variable name.
+  value: $(System.DefaultWorkingDirectory)/env # Variable value.
 - group: Variable_Collection
 - name: WORK
   # value: 'ANIKET_Shared_Connection'
 
+
+
 parameters:
-  - name: Envrionment
+  - name: envrionment
     displayName: Details of ENVS
     values:
       - dev
@@ -45,3 +47,20 @@ stages:
             backendAzureRmStorageAccountName: 'backendstrg'
             backendAzureRmContainerName: 'strg'
             backendAzureRmKey: 'dev.terraform.tfstate'
+
+        - task: DownloadSecureFile@1
+          name: TFVARS_Download
+          inputs:
+            secureFile: '${{ parameters.envrionment }}.tfvars'
+
+        - task: Bash@3
+          inputs:
+            targetType: 'inline'
+            script: 
+              # Write your commands here
+              echo 'Copy TFVARS File'
+              cp "$(TFVARS_Download.SecureFilePath)" "$(WORKDIR)/${{ parameters.envrionment }}"
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'

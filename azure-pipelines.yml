@@ -12,6 +12,13 @@ variables:
 - name: WORK
   # value: 'ANIKET_Shared_Connection'
 
+parameters:
+  - name: Envrionment
+    displayName: Details of ENVS
+    values:
+      - dev
+      - prod
+    default: dev
 
 stages:
   - stage: Terraform_Install

@@ -69,5 +69,5 @@ stages:
             provider: 'azurerm'
             command: 'plan'
             workingDirectory: '$(WORKDIR)/${{ parameters.envrionment }}'
-            commandOptions: '-var-file=${{ parameters.envrionment }}'
+            commandOptions: '-var-file=${{ parameters.envrionment }}.tfvars'
             environmentServiceNameAzureRM: 'ANIKET_Shared_Connection'

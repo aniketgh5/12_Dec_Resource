@@ -53,4 +53,5 @@ stages:
         provider: 'azurerm'
         command: 'plan'
         workingDirectory: '$(WORKDIR)/${{ parameters.environment }}'
+        commandOptions: 'terraform plan -var-file=${{ parameters.environment }}.tfvars'
         environmentServiceNameAzureRM: 'ANIKET_Shared_Connection'

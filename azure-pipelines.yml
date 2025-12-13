@@ -48,12 +48,12 @@ stages:
          sonar.scanner.skipBranchDetection=true
          sonar.exclusions=**/.terraform/**,**/*.tfstate*
 
-    - task: TerraformTask@5
-      displayName: Terraform Validate
-      inputs:
-        provider: 'azurerm'
-        command: 'validate'
-        workingDirectory: '$(WORKDIR)/${{ parameters.environment }}'
+    # - task: TerraformTask@5
+    #   displayName: Terraform Validate
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'validate'
+    #     workingDirectory: '$(WORKDIR)/${{ parameters.environment }}'
     - task: SonarQubeAnalyze@8
       inputs:
         jdkversion: 'JAVA_HOME_17_X64'

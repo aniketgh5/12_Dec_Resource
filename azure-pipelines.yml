@@ -1,74 +1,53 @@
-name: infra_monolithik
-
+name: infra_monolithic
 
 trigger: none
 
 pool: Remote_Agent
 
-variables:
-- name: WORKDIR # Required as first property. Variable name.
-  value: $(System.DefaultWorkingDirectory)/env # Variable value.
-- group: Variable_Collection
-- name: WORK
-  # value: 'ANIKET_Shared_Connection'
-- name: TFVARS
-  value: "${{ parameters.envrionment }}.tfvars"
-
-
 parameters:
-  - name: envrionment
-    displayName: Details of ENVS
-    values:
-      - dev
-      - prod
-    default: dev
+- name: environment
+  displayName: Select Environment
+  type: string
+  default: dev
+  values:
+    - dev
+    - prod
+
+variables:
+- name: WORKDIR
+  value: $(System.DefaultWorkingDirectory)/env
 
 stages:
-  - stage: Terraform_Install
-    jobs:
-      - job: 
-        steps:
-        - task: Bash@3
-          inputs:
-            targetType: 'inline'
-            script: |
-              # Write your commands here
-              
-              echo 'zip install'
-              sudo apt install unzip
-        - task: TerraformInstaller@1
-          inputs:
-            terraformVersion: 'latest'
-        - task: TerraformTask@5
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: '$(WORKDIR)/${{ parameters.envrionment }}'
-            backendServiceArm: 'ANIKET_Shared_Connection'
-            backendAzureRmStorageAccountName: 'backendstrg'
-            backendAzureRmContainerName: 'strg'
-            backendAzureRmKey: 'dev.terraform.tfstate'
+- stage: Terraform
+  displayName: Terraform Init Validate Plan
+  jobs:
+  - job: terraform
+    displayName: Terraform Job
+    steps:
 
-        - task: DownloadSecureFile@1
-          name: TFVARS_Download
-          inputs:
-            secureFile: '${{ parameters.envrionment }}.tfvars'
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
 
-        - task: Bash@3
-          inputs:
-            targetType: 'inline'
-            script: 
-              # Write your commands here
-              echo 'Copy TFVARS File'
-              cp "$(TFVARS_Download.SecureFilePath)" "$(WORKDIR)/${{ parameters.envrionment }}"
-        - task: TerraformTask@5
-          inputs:
-            provider: 'azurerm'
-            command: 'validate'
-        - task: TerraformTask@5
-          inputs:
-            provider: 'azurerm'
-            command: 'plan'
-            workingDirectory: '$(WORKDIR)/${{ parameters.envrionment }}'
-            commandOptions: -var-file="$(TFVARS)"
-            environmentServiceNameAzureRM: 'ANIKET_Shared_Connection'
+    - task: TerraformTask@5
+      displayName: Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(WORKDIR)/${{ parameters.environment }}'
+        backendServiceArm: 'ANIKET_Shared_Connection'
+
+    - task: TerraformTask@5
+      displayName: Terraform Validate
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+        workingDirectory: '$(WORKDIR)/${{ parameters.environment }}'
+
+    - task: TerraformTask@5
+      displayName: Terraform Plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(WORKDIR)/${{ parameters.environment }}'
+        environmentServiceNameAzureRM: 'ANIKET_Shared_Connection'

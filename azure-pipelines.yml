@@ -38,7 +38,13 @@ stages:
         backendAzureRmStorageAccountName: 'backendstrg'
         backendAzureRmContainerName: 'strg'
         backendAzureRmKey: '${{ parameters.environment }}.terraform.tfstate'
-        
+    - task: SonarQubePrepare@8
+      inputs:
+        SonarQube: 'SonarQube'
+        scannerMode: 'cli'
+        configMode: 'manual'
+        cliProjectKey: 'mahakal_project_mahakal_project_AZsXW_-gZHnJY6YKRiNH'
+        cliSources: '$(System.DefaultWorkingDirectory)/env'
 
     - task: TerraformTask@5
       displayName: Terraform Validate
@@ -46,12 +52,17 @@ stages:
         provider: 'azurerm'
         command: 'validate'
         workingDirectory: '$(WORKDIR)/${{ parameters.environment }}'
-
-    - task: TerraformTask@5
-      displayName: Terraform Plan
+    - task: SonarQubeAnalyze@8
       inputs:
-        provider: 'azurerm'
-        command: 'plan'
-        workingDirectory: '$(WORKDIR)/${{ parameters.environment }}'
-        # commandOptions: '-var-file=${{ parameters.environment }}.tfvars'
-        environmentServiceNameAzureRM: 'ANIKET_Shared_Connection'
+        jdkversion: 'JAVA_HOME_17_X64'
+    - task: SonarQubePublish@8
+      inputs:
+        pollingTimeoutSec: '300'
+    # - task: TerraformTask@5
+    #   displayName: Terraform Plan
+    #   inputs:
+    #     provider: 'azurerm'
+    #     command: 'plan'
+    #     workingDirectory: '$(WORKDIR)/${{ parameters.environment }}'
+    #     # commandOptions: '-var-file=${{ parameters.environment }}.tfvars'
+    #     environmentServiceNameAzureRM: 'ANIKET_Shared_Connection'

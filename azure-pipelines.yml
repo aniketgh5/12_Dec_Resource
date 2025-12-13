@@ -45,6 +45,7 @@ stages:
         cliProjectKey: 'mahakal_project_mahakal_project_AZsXW_-gZHnJY6YKRiNH'
         cliSources: '$(WORKDIR)/${{ parameters.environment }}'
         extraProperties: |
+         sonar.branch.name=main
          sonar.exclusions=**/.terraform/**,**/*.tfstate*
 
     - task: TerraformTask@5

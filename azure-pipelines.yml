@@ -44,7 +44,7 @@ stages:
         scannerMode: 'cli'
         configMode: 'manual'
         cliProjectKey: 'mahakal_project_mahakal_project_AZsXW_-gZHnJY6YKRiNH'
-        cliSources: '$(System.DefaultWorkingDirectory)/env'
+        cliSources: '$(WORKDIR)/${{ parameters.environment }}'
 
     - task: TerraformTask@5
       displayName: Terraform Validate
